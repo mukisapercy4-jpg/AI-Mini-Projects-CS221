@@ -79,10 +79,55 @@
 \subsection{Bellman Optimality Equations}
 \subsection{Convergence of Value Iteration and Q-Learning}
 
-\section{Assignment 5: Pac-Man (\texttt{pacman})}
+\section{Assignment 5: Pac-Man Multi-Agent Adversarial Search (\texttt{pacman})}
 \textit{Assigned to: Jill and Mukisa Percy}
-\subsection{Adversarial Search \& Minimax Tree Formulations}
-\subsection{Alpha-Beta Cutoff Theorems}
+
+\subsection{Multi-Agent Minimax Game Tree Formulation}
+In the multi-agent Pac-Man environment, games are zero-sum with one maximizing agent (Pac-Man, index $0$) and $k$ minimizing adversaries (Ghosts, indices $1, \dots, k$). One search ply consists of $1 + k$ agent turns.
+
+The value of state $s$ is recursively given by:
+\begin{equation}
+V(s) = \begin{cases}
+\text{Utility}(s), & \text{if } s \text{ is terminal or depth limit } d = d_{\max} \\
+\max_{a \in \text{Actions}(s, 0)} V(\text{Succ}(s, a)), & \text{if agent is Pac-Man (index 0)} \\
+\min_{a \in \text{Actions}(s, i)} V(\text{Succ}(s, a)), & \text{if agent is ghost } i \in \{1, \dots, k\}
+\end{cases}
+\end{equation}
+
+\noindent\textbf{Sub-optimal Adversaries:} If ghosts play sub-optimally (e.g., random walks), the Minimax agent guarantees a realized utility at least as great as the minimax theoretical value:
+\begin{equation}
+\text{Utility}_{\text{actual}} \ge V_{\text{minimax}}(s_0)
+\end{equation}
+However, Minimax is inherently pessimistic and cannot exploit predictable ghost mistakes, which Expectimax handles naturally.
+
+\subsection{Alpha-Beta Pruning Correctness and Complexity}
+Alpha-Beta pruning tracks parameters $\alpha$ (best choice for MAX along the path) and $\beta$ (best choice for MIN along the path):
+\begin{itemize}
+    \item \textbf{$\beta$-Pruning at MAX Node:} Truncates search if $v \ge \beta$. An ancestor MIN node would never choose this path.
+    \item \textbf{$\alpha$-Pruning at MIN Node:} Truncates search if $v \le \alpha$. An ancestor MAX node already found a superior option elsewhere.
+\end{itemize}
+
+\noindent Under optimal move ordering (best successors explored first), the effective branching factor is halved:
+\begin{equation}
+T_{\text{optimal}}(d) = O\left(b^{d/2}\right) = O\left((\sqrt{b})^d\right)
+\end{equation}
+allowing the search to double in tree depth within identical time constraints.
+
+\subsection{Expectimax vs. Minimax Invariance Under Transformations}
+\begin{enumerate}
+    \item \textbf{Monotonic Transformations:} Minimax decisions depend solely on value orderings. For any strictly increasing function $f$, $\arg\max_a f(V(s_a)) = \arg\max_a V(s_a)$. Minimax is invariant under all monotonic transformations.
+    \item \textbf{Expectimax Sensitivity:} Expectimax calculates expectations:
+    \begin{equation}
+    \mathbb{E}[V] = \sum_a P(a) V(s_a)
+    \end{equation}
+    Because $\mathbb{E}[f(X)] \neq f(\mathbb{E}[X])$ for non-linear functions (Jensen's Inequality), Expectimax decisions can change under non-linear monotonic transformations. Expectimax is invariant \textbf{only} under positive affine transformations ($f(x) = c x + d, c > 0$).
+\end{enumerate}
+
+\subsection{State Evaluation Function Formulation}
+Our heuristic evaluation function combines domain features linearly:
+\begin{equation}
+\text{Eval}(s) = w_1 \cdot \text{Score}(s) + \frac{w_2}{d_{\text{food}}(s) + 1} - w_3 N_{\text{food}}(s) - w_4 N_{\text{capsules}}(s) + \sum_{g} \text{GhostPenalty}(g, s)
+\end{equation}
 
 \section{Assignment 6: Course Scheduling \& Bayesian Networks (\texttt{scheduling} / \texttt{bayesian})}
 \textit{Assigned to: Joseph Mary}
