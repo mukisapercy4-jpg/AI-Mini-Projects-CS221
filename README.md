@@ -69,8 +69,8 @@ Artificial_Intelligence_Project_Work/
 
 ### 1. Clone & Setup Virtual Environment
 ```bash
-git clone <YOUR_GITHUB_REPO_URL>
-cd Artificial_Intelligence_Project_Work
+git clone https://github.com/mukisapercy4-jpg/AI-Mini-Projects-CS221.git
+cd AI-Mini-Projects-CS221
 
 # Create and activate virtual environment
 python -m venv .venv
