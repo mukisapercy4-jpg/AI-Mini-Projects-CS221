@@ -66,9 +66,48 @@
 \subsection{Probability and Maximum Likelihood}
 
 \section{Assignment 2: Sentiment Classification (\texttt{sentiment})}
-\textit{Assigned to: [Assigned Member]}
-\subsection{Loss Function Derivations}
-\subsection{Stochastic Gradient Descent Analysis}
+\textit{Assigned to: Ssewajje Jolly Hilton}
+
+\subsection{Problem 1: Building Intuition}
+\textbf{(a) SGD by Hand.} We run SGD on the hinge loss. Let the initial weight vector be \(\mathbf{w} = [0, 0, 0, 0, 0, 0]\) for ("pretty", "good", "bad", "plot", "not", "scenery"), with learning rate \(\eta = 0.1\).
+\begin{enumerate}
+    \item \textbf{"not good" (y = -1):} Score = 0. Margin = 0. Update \(\mathbf{w} \leftarrow \mathbf{w} + 0.1(-1)\phi\). \\
+    \(\mathbf{w} = [0, -0.1, 0, 0, -0.1, 0]\)
+    \item \textbf{"pretty bad" (y = -1):} Score = 0. Margin = 0. Update. \\
+    \(\mathbf{w} = [-0.1, -0.1, -0.1, 0, -0.1, 0]\)
+    \item \textbf{"good plot" (y = +1):} Score = -0.1. Margin = -0.1. Update. \\
+    \(\mathbf{w} = [-0.1, 0.0, -0.1, 0.1, -0.1, 0]\)
+    \item \textbf{"pretty scenery" (y = +1):} Score = -0.1. Margin = -0.1. Update. \\
+    \(\mathbf{w} = [0.0, 0.0, -0.1, 0.1, -0.1, 0.1]\)
+\end{enumerate}
+\textbf{Final Weight Vector:} \([0.0, 0.0, -0.1, 0.1, -0.1, 0.1]\)
+
+\medskip
+\noindent\textbf{(b) Linear Separability.} Let \(w_b, w_g, w_n\) be the weights for "bad", "good", "not". For zero error, we need: \(w_b < 0\) (from "bad"), \(w_g > 0\) (from "good"), \(w_n + w_b > 0 \implies w_n > 0\) (from "not bad"), and \(w_n + w_g < 0 \implies w_n < 0\) (from "not good"). We cannot have \(w_n > 0\) and \(w_n < 0\). Thus, no linear classifier can separate this. \\
+\textbf{Additional Feature:} Add bigram features "not\_bad" and "not\_good" to learn independent weights for the negated phrases.
+
+\subsection{Problem 2: Predicting Movie Ratings}
+\textbf{(a) Squared Loss.} \(\text{Loss}(x, y, \mathbf{w}) = \frac{1}{2} (\sigma(\mathbf{w} \cdot \phi(x)) - y)^2\)
+
+\medskip
+\noindent\textbf{(b) Gradient.} Let \(p = \sigma(\mathbf{w} \cdot \phi(x))\). \\
+\(\nabla_\mathbf{w} \text{Loss} = (p - y) \cdot p(1 - p) \cdot \phi(x)\)
+
+\medskip
+\noindent\textbf{(c) Magnitude of Gradient.} To make the gradient arbitrarily small, we need \(p \to 1\) (since \(y=1\)). This happens when \(\mathbf{w} \cdot \phi(x) \to \infty\). The gradient can never be exactly zero because the sigmoid only approaches 1 asymptotically; since weights cannot be infinity, \(1-p\) is always strictly positive.
+
+\subsection{Problem 3: Sentiment Classification}
+\textbf{(e) Character N-grams.} \(n=3\) or \(n=4\) usually yields the lowest validation error. N-grams capture sub-word patterns (prefixes/suffixes) and handle misspellings. Example: \textit{"I hated this movie. It was un-freaking-believable."} Word features miss the root, but n-grams like "fre", "eak", "bel" match it to the positive root "believable".
+
+\subsection{Problem 5: K-means Clustering}
+\textbf{(a) Manual 2-means.} \\
+\textit{Run 1:} \(\mu_1=[0,0], \mu_2=[11,0]\). Final: \(\mu_1=[2,0], \mu_2=[8.5,0]\). Loss: 20.5. \\
+\textit{Run 2:} \(\mu_1=[0,0], \mu_2=[4,0]\). Final: \(\mu_1=[0,0], \mu_2=[7,0]\). Loss: 26.
+
+\medskip
+\noindent\textbf{(c) Scaling K-means.} \\
+\textit{Scaling all dimensions:} Yes, clusters remain the same. All distances scale by \(c^2\), preserving relative ordering. \\
+\textit{Scaling certain dimensions:} No. It distorts distances. E.g., A=[1,1], B=[2,1], C=[1,10] cluster differently if the first dimension is multiplied by 10.
 
 \section{Assignment 3: Route Planning (\texttt{route})}
 \textit{Assigned to: Precious Atwiine}
