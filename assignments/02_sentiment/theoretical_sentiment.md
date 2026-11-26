@@ -1,70 +1,62 @@
-# Theoretical Analysis: Assignment 2 — Sentiment Classification
+# Assignment 2: Sentiment Classification Theory
 
-**Course:** Makerere University — AI Mini-Projects (CS221 Aligned)  
-**Topic:** Linear Classifiers, Hinge Loss, Subgradients & K-Means Clustering
+**Author:** Ssewajje Jolly Hilton
 
----
+## Problem 1: Building Intuition
 
-## 1. Linear Predictor & Loss Function Comparison
+**Part a: SGD by Hand**
+We run stochastic gradient descent (SGD) on the hinge loss. Let the feature mapping \(\phi(x)\) return word counts and let the initial weight vector be \(\mathbf{w} = [0, 0, 0, 0, 0, 0]\) for the tokens ("pretty", "good", "bad", "plot", "not", "scenery"). We use a learning rate \(\eta = 0.1\).
 
-### 1.1 The Linear Margin
-For input feature vector $\phi(x) \in \mathbb{R}^D$, weight vector $w \in \mathbb{R}^D$, and true label $y \in \{-1, +1\}$, the margin is defined as:
-$$m(x, y, w) = (w \cdot \phi(x)) \cdot y$$
-- $m > 0 \implies$ Correct prediction.
-- $m < 0 \implies$ Incorrect prediction.
-- $|m| \implies$ Confidence of the prediction.
+1. **"not good" (y = -1):** Score = 0. Margin = 0 < 1. Update: \(\mathbf{w} \leftarrow \mathbf{w} + 0.1(-1)\phi\). 
+   \(\mathbf{w} = [0, -0.1, 0, 0, -0.1, 0]\)
+2. **"pretty bad" (y = -1):** Score = 0. Margin = 0 < 1. Update: \(\mathbf{w} \leftarrow \mathbf{w} + 0.1(-1)\phi\).
+   \(\mathbf{w} = [-0.1, -0.1, -0.1, 0, -0.1, 0]\)
+3. **"good plot" (y = +1):** Score = -0.1. Margin = -0.1 < 1. Update: \(\mathbf{w} \leftarrow \mathbf{w} + 0.1(+1)\phi\).
+   \(\mathbf{w} = [-0.1, 0.0, -0.1, 0.1, -0.1, 0]\)
+4. **"pretty scenery" (y = +1):** Score = -0.1. Margin = -0.1 < 1. Update: \(\mathbf{w} \leftarrow \mathbf{w} + 0.1(+1)\phi\).
+   \(\mathbf{w} = [0.0, 0.0, -0.1, 0.1, -0.1, 0.1]\)
 
-### 1.2 Comparison of Common Loss Functions
-1. **Zero-One Loss:**
-   $$\text{Loss}_{0-1}(x, y, w) = \mathbf{1}[m(x, y, w) \le 0]$$
-   - Discontinuous, non-convex, and NP-hard to optimize directly.
-2. **Hinge Loss:**
-   $$\text{Loss}_{\text{hinge}}(x, y, w) = \max(0, 1 - m(x, y, w)) = \max(0, 1 - (w \cdot \phi(x)) y)$$
-   - Convex upper bound on the zero-one loss.
-   - Demands a "margin of safety" ($m \ge 1$), penalizing both incorrect classifications and marginally correct ones ($0 < m < 1$).
-3. **Logistic Loss:**
-   $$\text{Loss}_{\text{logistic}}(x, y, w) = \log(1 + e^{-m(x, y, w)})$$
-   - Smooth, strictly convex everywhere, and approaches zero asymptotically.
+**Final Weight Vector:** `[0.0, 0.0, -0.1, 0.1, -0.1, 0.1]`
 
----
+**Part b: Linear Separability Proof**
+Let the weights for "bad", "good", and "not" be \(w_b, w_g, w_n\). For zero error, the classifier must satisfy:
+1. "bad" (-1): \(w_b < 0\)
+2. "good" (+1): \(w_g > 0\)
+3. "not bad" (+1): \(w_n + w_b > 0 \implies w_n > -w_b > 0\)
+4. "not good" (-1): \(w_n + w_g < 0 \implies w_n < -w_g < 0\)
 
-## 2. Subgradient Derivation of Hinge Loss
+We cannot have \(w_n > 0\) and \(w_n < 0\) simultaneously. Thus, no linear classifier can perfectly separate this dataset.
 
-Because the hinge function $f(z) = \max(0, 1 - z)$ contains a non-differentiable kink at $z = 1$, we employ the subgradient:
-$$\partial_w \text{Loss}_{\text{hinge}}(x, y, w) = \begin{cases}
--y \phi(x) & \text{if } 1 - (w \cdot \phi(x)) y > 0 \quad (\text{margin violation}) \\
-0 & \text{if } 1 - (w \cdot \phi(x)) y < 0 \quad (\text{safe margin}) \\
-\{ -c \cdot y \phi(x) \mid c \in [0, 1] \} & \text{if } 1 - (w \cdot \phi(x)) y = 0 \quad (\text{subdifferential})
-\end{cases}$$
+**Additional Feature:** Add a bigram feature for **"not_bad"** and **"not_good"**. This allows the model to learn a positive weight for "not_bad" and a negative weight for "not_good" independent of the individual word weights.
 
-### Stochastic Gradient Descent (SGD) Update Rule:
-For learning rate $\eta > 0$:
-$$w^{(t+1)} \leftarrow \begin{cases}
-w^{(t)} + \eta y \phi(x) & \text{if } (w^{(t)} \cdot \phi(x)) y < 1 \\
-w^{(t)} & \text{otherwise}
-\end{cases}$$
+## Problem 2: Predicting Movie Ratings
 
----
+**Part a: Squared Loss**
+\[
+ \text{Loss}(x, y, \mathbf{w}) = \frac{1}{2} (\sigma(\mathbf{w} \cdot \phi(x)) - y)^2 
+\]
 
-## 3. Mathematical Proof of $K$-Means Convergence
+**Part b: Gradient**
+Let \(p = \sigma(\mathbf{w} \cdot \phi(x))\). The derivative of the sigmoid is \(\sigma'(z) = p(1 - p)\).
+\[
+ \nabla_\mathbf{w} \text{Loss} = (p - y) \cdot p(1 - p) \cdot \phi(x) 
+\]
 
-The $K$-Means distortion objective is defined as:
-$$\mathcal{J}(\mu, z) = \sum_{i=1}^n \|\phi(x_i) - \mu_{z_i}\|_2^2$$
-where $z_i \in \{1, \dots, K\}$ is the cluster assignment for data point $i$, and $\mu_k \in \mathbb{R}^D$ is the center of cluster $k$.
+**Part c: Magnitude of Gradient**
+To make the gradient arbitrarily small, we need \(p \to 1\) (since \(y=1\)). This happens when \(\mathbf{w} \cdot \phi(x) \to \infty\). Thus, making the weights arbitrarily large in the direction of \(\phi(x)\) will shrink the gradient. The gradient can **never be exactly zero** for finite weights because the sigmoid function only approaches 1 asymptotically. Since we cannot set weights to infinity, \(1-p\) will always be strictly greater than zero.
 
-### Proof Steps:
-1. **Assignment Step (Minimizing over $z$ with fixed $\mu$):**
-   $$z_i^{(t)} = \arg\min_{k \in \{1, \dots, K\}} \|\phi(x_i) - \mu_k^{(t-1)}\|_2^2$$
-   By construction, choosing the minimum Euclidean distance for each $i$ independently strictly minimizes $\mathcal{J}$ holding $\mu$ constant:
-   $$\mathcal{J}(\mu^{(t-1)}, z^{(t)}) \le \mathcal{J}(\mu^{(t-1)}, z^{(t-1)})$$
+## Problem 3: Sentiment Classification
 
-2. **Centroid Update Step (Minimizing over $\mu$ with fixed $z$):**
-   Holding assignments $z$ fixed, $\mathcal{J}$ decomposes into $K$ independent sub-problems. Setting the gradient with respect to $\mu_k$ to zero:
-   $$\nabla_{\mu_k} \sum_{i: z_i = k} \|\phi(x_i) - \mu_k\|_2^2 = -2 \sum_{i: z_i = k} (\phi(x_i) - \mu_k) = 0 \implies \mu_k^{(t)} = \frac{1}{|C_k|} \sum_{i: z_i = k} \phi(x_i)$$
-   Since the squared Euclidean norm is strictly convex, the sample mean is the unique global minimizer for each cluster:
-   $$\mathcal{J}(\mu^{(t)}, z^{(t)}) \le \mathcal{J}(\mu^{(t-1)}, z^{(t)})$$
+**Part e: Character N-grams**
+For the value of \(n\), \(n=3\) or \(n=4\) usually produces the smallest validation error. Character n-grams perform almost as well as word features because they capture sub-word morphological patterns (like prefixes and suffixes) and handle misspellings or punctuation.
+A review where character n-grams outperform word features: *"I hated this movie. It was un-freaking-believable."* Word features would see "un-freaking-believable" as one unknown word, but character n-grams (like "fre", "eak", "bel") can match it to the positive root word "believable", capturing the sentiment better.
 
-3. **Monotonicity and Finite Termination:**
-   Combining both steps:
-   $$\mathcal{J}(\mu^{(t)}, z^{(t)}) \le \mathcal{J}(\mu^{(t-1)}, z^{(t-1)})$$
-   Because the objective is bounded below ($\mathcal{J} \ge 0$) and the number of discrete cluster assignments is finite ($K^n$), the algorithm must terminate at a local minimum in a finite number of iterations without cycling. $\blacksquare$
+## Problem 5: K-means Clustering
+
+**Part a: Manual 2-means Execution**
+*Run 1:* Initial \(\mu_1=[0,0], \mu_2=[11,0]\). Final centers: \(\mu_1=[2,0], \mu_2=[8.5,0]\). Assignments: \(x_1, x_2\) in cluster 1; \(x_3, x_4\) in cluster 2. Final loss: 20.5.
+*Run 2:* Initial \(\mu_1=[0,0], \mu_2=[4,0]\). Final centers: \(\mu_1=[0,0], \mu_2=[7,0]\). Assignments: \(x_1\) in cluster 1; \(x_2, x_3, x_4\) in cluster 2. Final loss: 26.
+
+**Part c: Scaling K-means**
+*Scaling all dimensions by a non-zero factor:* **Yes**, the clusters remain the same. K-means uses Euclidean distance, and scaling all dimensions by \(c\) multiplies all distances by \(c^2\). Since the relative ordering of distances doesn't change, the nearest centroid remains identical.
+*Scaling only certain dimensions:* **No**, the clusters are not guaranteed to remain the same. Scaling one dimension changes the relative distances between points. For example, points A=[1,1], B=[2,1], C=[1,10] might cluster differently if we multiply only the first dimension by 10.
