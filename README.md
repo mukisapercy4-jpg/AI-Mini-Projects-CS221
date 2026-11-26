@@ -25,7 +25,7 @@ This repository contains the collaborative implementation of the Artificial Inte
 | # | Assignment Module | Assigned Team Member(s) | Status |
 |---|-------------------|-------------------------|--------|
 | 1 | **Foundations** (`foundations`) | Henry | In Progress |
-| 2 | **Sentiment Classification** (`sentiment`) | *[To be confirmed]* | Assigned |
+| 2 | **Sentiment Classification** (`sentiment`) | *SSEWAJJE JOLLY HILTON* | Assigned |
 | 3 | **Route Planning** (`route`) | Precious Atwiine | In Progress |
 | 4 | **Controlling MountainCar** (`mountaincar`) | Marcus & *[Co-lead]* | In Progress |
 | 5 | **Pac-Man** (`pacman`) | Jill & Mukisa Percy | In Progress |
