@@ -28,16 +28,16 @@
 ---
 
 ## Section 1: Foundations (`foundations`)
-**Author:** Henry
+**Author:** Ssenyondo Henry (Student No. 2500703882)
 
 ### 1.1 Mathematical Optimization & Vector Spaces
-- **Problem Formulation:**
-- **Derivations:**
-- **Complexity Analysis:**
+- **Sparse Dot Product Complexity:** Representing sparse vectors as hash tables with $\text{nnz}(v_1), \text{nnz}(v_2)$ entries and iterating over the smaller dictionary gives optimal $O(\min(\text{nnz}(v_1), \text{nnz}(v_2)))$ runtime, dominating $O(D)$ dense vectors.
+- **Cauchy-Schwarz Inequality:** $|u \cdot v| \le \|u\|_2 \|v\|_2$, with equality iff $u = \alpha v$.
+- **Ridge Regression Gradient:** $J(w) = \frac{1}{2n}\sum_{i=1}^n (w^T x_i - y_i)^2 + \frac{\lambda}{2}\|w\|_2^2$ has gradient $\nabla_w J(w) = \frac{1}{n}\sum_{i=1}^n (w^T x_i - y_i)x_i + \lambda w$, where $L_2$ regularization acts as weight decay $(1 - \eta\lambda)w^{(t)}$.
 
 ### 1.2 Probability Foundations & Maximum Likelihood
-- **Derivations:**
-- **Proofs:**
+- **Bernoulli MLE:** $\hat{p}_{\text{MLE}} = \frac{1}{n}\sum_{i=1}^n X_i$.
+- **Univariate Gaussian MLE:** $\hat{\mu}_{\text{MLE}} = \frac{1}{n}\sum_{i=1}^n X_i$ and $\hat{\sigma}^2_{\text{MLE}} = \frac{1}{n}\sum_{i=1}^n (X_i - \hat{\mu})^2$.
 
 ---
 
@@ -105,28 +105,28 @@ A review where character n-grams outperform word features: *"I hated this movie.
 
 
 ## Section 3: Route Planning (`route`)
-**Author:** Precious Atwiine
+**Author:** Atwiine Precious Mwebaze (Student No. 2500703347)
 
 ### 3.1 Admissibility and Consistency of Heuristics
-- **Definitions & Mathematical Proof:**
-- **Landmark Heuristic Construction:**
+- **Definitions & Mathematical Proof:** $h(s)$ is admissible if $0 \le h(s) \le h^*(s)$ and consistent if $h(s) \le c(s, a, s') + h(s')$ with $h(g) = 0$. Telescoping along an optimal path $s = s_0, \dots, s_k = g$ proves $h(s_0) \le h^*(s_0) + h(g) = h^*(s)$, so consistency implies admissibility.
+- **Landmark Heuristic Construction:** $h_L(s) = |d(s, L) - d(g, L)|$ satisfies $h_L(u) - h_L(v) \le |d(u, L) - d(v, L)| \le c(u, v)$ by the triangle and reverse triangle inequalities, with $h_L(g) = 0$, making it consistent and admissible.
 
 ### 3.2 Algorithm Comparison: Dijkstra vs. A*
-- **Search Space Expansion:**
-- **Optimality Trade-offs:**
+- **Search Space Expansion:** UCS/Dijkstra expands in concentric contours of $g(s)$, while A* directs search along an ellipse toward the goal using $f(s) = g(s) + h(s)$.
+- **Optimality Trade-offs:** With a consistent heuristic, A* guarantees optimal paths without re-opening closed nodes while expanding a subset of UCS states.
 
 ---
 
 ## Section 4: Controlling MountainCar (`mountaincar`)
-**Authors:** Marcus & Co-Lead
+**Authors:** Opolot Emmanuel Marcus (Student No. 2500729501) & Kabanda Joel (Student No. 2500703381)
 
 ### 4.1 Markov Decision Process (MDP) Formulation
-- **State Space, Action Space, Transition Dynamics:**
-- **Bellman Optimality Equations:**
+- **State Space, Action Space, Transition Dynamics:** $(\mathcal{S}, \mathcal{A}, T, R, \gamma)$ with $s = (x, v) \in [-1.2, 0.6] \times [-0.07, 0.07]$, $a \in \{-1, 0, +1\}$, $R = -1$ for $x < 0.5$ and $0$ at goal $x \ge 0.5$.
+- **Bellman Optimality Equations:** $(T^* V)(s) = \max_a [R(s, a) + \gamma \sum_{s'} T(s, a, s') V(s')]$.
 
 ### 4.2 Value Iteration vs. Policy Iteration vs. Q-Learning
-- **Contraction Mapping Proof Outline:**
-- **Convergence Properties under Function Approximation:**
+- **Contraction Mapping Proof Outline:** Using $|\max_a f(a) - \max_a g(a)| \le \max_a |f(a) - g(a)|$, $\|T^* U - T^* V\|_\infty \le \gamma \|U - V\|_\infty$, so by the Banach Fixed-Point Theorem Value Iteration converges linearly at rate $\gamma$ to $V^*$.
+- **Convergence Properties under Function Approximation:** Semi-gradient Q-learning $\hat{Q}(s, a; w) = w \cdot \phi(s, a)$ updates $w \leftarrow w + \alpha (r + \gamma \max_{a'} \hat{Q}(s', a'; w) - \hat{Q}(s, a; w))\phi(s, a)$; coarse tile coding and small $\alpha$ mitigate the deadly triad.
 
 ---
 

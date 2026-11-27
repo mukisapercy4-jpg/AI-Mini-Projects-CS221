@@ -61,9 +61,17 @@
 \newpage
 
 \section{Assignment 1: Foundations (\texttt{foundations})}
-\textit{Assigned to: Henry}
-\subsection{Mathematical Optimization}
-\subsection{Probability and Maximum Likelihood}
+\textit{Assigned to: Ssenyondo Henry (2500703882)}
+
+\subsection{Sparse Vector Representations \& Computational Complexity}
+Let $v_1$ and $v_2$ be sparse vectors stored as hash tables with $\text{nnz}(v_1)$ and $\text{nnz}(v_2)$ non-zero entries. Iterating over the smaller dictionary yields optimal dot-product complexity $O(\min(\text{nnz}(v_1), \text{nnz}(v_2)))$, dominating dense $O(D)$ vectors when $D \gg \text{nnz}(v)$. By Cauchy-Schwarz, $|u \cdot v| \le \|u\|_2 \|v\|_2$ with equality iff $u = \alpha v$.
+
+\subsection{Probability and Maximum Likelihood Estimation}
+\begin{itemize}
+    \item \textbf{Bernoulli MLE:} For $X_1, \dots, X_n \overset{\text{i.i.d.}}{\sim} \text{Bernoulli}(p)$, setting $\frac{d\ell}{dp} = \frac{\sum X_i}{p} - \frac{n - \sum X_i}{1-p} = 0$ yields $\hat{p}_{\text{MLE}} = \frac{1}{n}\sum_{i=1}^n X_i$.
+    \item \textbf{Gaussian MLE:} For $X_i \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu, \sigma^2)$, $\hat{\mu}_{\text{MLE}} = \frac{1}{n}\sum_{i=1}^n X_i$ and $\hat{\sigma}^2_{\text{MLE}} = \frac{1}{n}\sum_{i=1}^n (X_i - \hat{\mu})^2$.
+    \item \textbf{Ridge Regression:} Minimizing $J(w) = \frac{1}{2n}\sum_{i=1}^n (w^T x_i - y_i)^2 + \frac{\lambda}{2}\|w\|_2^2$ gives gradient $\nabla_w J(w) = \frac{1}{n}\sum_{i=1}^n (w^T x_i - y_i)x_i + \lambda w$, where $L_2$ regularization acts as weight decay $(1 - \eta\lambda)w^{(t)}$.
+\end{itemize}
 
 \section{Assignment 2: Sentiment Classification (\texttt{sentiment})}
 \textit{Assigned to: Ssewajje Jolly Hilton}
@@ -110,14 +118,24 @@
 \textit{Scaling certain dimensions:} No. It distorts distances. E.g., A=[1,1], B=[2,1], C=[1,10] cluster differently if the first dimension is multiplied by 10.
 
 \section{Assignment 3: Route Planning (\texttt{route})}
-\textit{Assigned to: Precious Atwiine}
+\textit{Assigned to: Atwiine Precious Mwebaze (2500703347)}
+
 \subsection{Heuristic Admissibility and Consistency Proofs}
-\subsection{Search Complexity Comparison}
+A heuristic $h(s)$ is \textbf{admissible} if $0 \le h(s) \le h^*(s)$ and \textbf{consistent} if $h(s) \le c(s, a, s') + h(s')$ with $h(g)=0$. Along an optimal path $s = s_0, \dots, s_k = g$, telescoping the consistency inequalities yields $h(s_0) \le \sum_{i=0}^{k-1} c(s_i, a_i, s_{i+1}) + h(g) = h^*(s)$, proving consistency implies admissibility.
+
+For a landmark $L$, $h_L(s) = |d(s, L) - d(g, L)|$ satisfies $h_L(u) - h_L(v) \le |d(u, L) - d(v, L)| \le c(u, v)$ by the triangle and reverse triangle inequalities, with $h_L(g) = 0$; hence $h_L$ is consistent and admissible.
+
+\subsection{Search Complexity Comparison: UCS vs. A*}
+Uniform Cost Search expands nodes in concentric contours of $g(s)$, whereas A* with a consistent heuristic prioritizes $f(s) = g(s) + h(s)$, expanding a goal-directed subset of UCS states without re-opening closed nodes.
 
 \section{Assignment 4: Controlling MountainCar (\texttt{mountaincar})}
-\textit{Assigned to: Marcus and Co-Lead}
-\subsection{Bellman Optimality Equations}
+\textit{Assigned to: Opolot Emmanuel Marcus (2500729501) \& Kabanda Joel (2500703381)}
+
+\subsection{MDP Formulation and Bellman Optimality}
+MountainCar is modeled as an MDP $(\mathcal{S}, \mathcal{A}, T, R, \gamma)$ with continuous state $s = (x, v) \in [-1.2, 0.6] \times [-0.07, 0.07]$, discrete actions $a \in \{-1, 0, +1\}$, reward $-1$ per non-goal step ($x < 0.5$), and discount $\gamma \in (0, 1)$. The Bellman optimality operator $(T^* V)(s) = \max_{a} [R(s, a) + \gamma \sum_{s'} T(s, a, s') V(s')]$ is a $\gamma$-contraction in the supremum norm: $\|T^* U - T^* V\|_\infty \le \gamma \|U - V\|_\infty$.
+
 \subsection{Convergence of Value Iteration and Q-Learning}
+By the Banach Fixed-Point Theorem, Value Iteration $V_{k+1} = T^* V_k$ converges linearly at rate $\gamma$ to the unique $V^*$. For continuous states, semi-gradient Q-learning approximates $\hat{Q}(s, a; w) = w \cdot \phi(s, a)$ with update $w \leftarrow w + \alpha (r + \gamma \max_{a'} \hat{Q}(s', a'; w) - \hat{Q}(s, a; w))\phi(s, a)$, using coarse tile coding and small $\alpha$ to maintain stability.
 
 \section{Assignment 5: Pac-Man Multi-Agent Adversarial Search (\texttt{pacman})}
 \textit{Assigned to: Jill and Mukisa Percy}
@@ -165,13 +183,21 @@ Make the utility of a loss a fixed large penalty that does not depend on how man
 A delivery app rewards riders for the number of deliveries completed per hour. Riders can raise that number by running red lights, ignoring traffic rules and riding unsafely. This is an instance of \textbf{reward hacking}: the riders satisfy the stated objective (deliveries per hour) in a way that defeats the designer's real goal, which was fast and safe delivery.
 
 \section{Assignment 6: Course Scheduling \& Bayesian Networks (\texttt{scheduling} / \texttt{bayesian})}
-\textit{Assigned to: Joseph Mary}
+\textit{Assigned to: Joseph Mary Yiga (2500703615)}
+
 \subsection{Constraint Satisfaction Problem Modeling}
+A CSP $(X, D, C)$ models course scheduling with course variables $X_i$, quarter domains $D_i$, and factors enforcing prerequisites ($q_{\text{prereq}} < q_{\text{course}}$) and capacity limits. With $e$ binary constraints and max domain size $d$, each directed arc $(X_i, X_j)$ is re-enqueued at most $d$ times and revised in $O(d^2)$, giving \textbf{AC-3} worst-case complexity $O(e \cdot d^3)$. Combining AC-3 with MRV (fail-first) and LCV (fail-last) minimizes backtracking.
+
 \subsection{Bayesian Network Independence and Inference}
+A Bayesian Network factorizes $P(X_1, \dots, X_n) = \prod_i P(X_i \mid \text{Parents}(X_i))$. Under d-separation, chains ($X \to Y \to Z$) and forks ($X \leftarrow Y \to Z$) are blocked iff $Y \in E$, while colliders ($X \to Y \leftarrow Z$) are blocked iff neither $Y$ nor any descendant of $Y$ is in $E$ (observing a collider enables explaining away). Exact enumeration/variable elimination is $O(n \cdot d^{w+1})$ in induced treewidth $w$, whereas Likelihood Weighting samples non-evidence variables and weights by $\prod_{e \in E} P(e \mid \text{Parents}(e))$, converging at $O(1/\sqrt{N})$.
 
 \section{Assignment 7: Car Tracking \& Logic (\texttt{tracking} / \texttt{logic})}
-\textit{Assigned to: Josh Kwizera}
+\textit{Assigned to: Muzira Joshua Kwizera (2500703484)}
+
 \subsection{Hidden Markov Models and Particle Filtering}
-\subsection{First-Order Logic Transformations and Resolution}
+In car tracking, exact HMM filtering computes $P(H_t \mid e_{1:t}) \propto P(e_t \mid H_t) \sum_{h_{t-1}} P(H_t \mid h_{t-1}) P(h_{t-1} \mid e_{1:t-1})$ in $O(T |\mathcal{S}|^2)$ time. For large state spaces, Particle Filtering maintains $N$ particles updated via transition proposal, Gaussian sensor weighting $P(e_t \mid h_t^{(i)})$, and systematic resampling to prevent particle depletion.
+
+\subsection{Propositional Logic Transformations and Resolution}
+Converting a propositional formula to Conjunctive Normal Form (CNF) proceeds by eliminating $\leftrightarrow$ and $\to$, pushing $\neg$ inward via De Morgan's laws, and distributing $\lor$ over $\land$. Resolution derives $(A \lor B)$ from $(A \lor p)$ and $(B \lor \neg p)$, which is sound and refutation-complete: $\text{KB} \models \alpha \iff \text{CNF}(\text{KB} \land \neg\alpha) \vdash_{\text{Res}} \square$.
 
 \end{document}
