@@ -211,25 +211,33 @@ This balances cautious survival against active ghosts with aggressive pursuit du
 ---
 
 ## Section 6: Course Scheduling & Bayesian Networks (`scheduling` / `bayesian`)
-**Author:** Joseph Mary
+**Author:** Joseph Mary Yiga (Student No. 2500703615)
 
 ### 6.1 Constraint Satisfaction Problems (CSP)
 - **Constraint Graph Formulation:**
+  A CSP is a tuple $(X, D, C)$ where $X = \{X_1, \dots, X_n\}$ are variables (courses), $D = \{D_1, \dots, D_n\}$ are finite domains (quarters), and $C$ are factors $f_j(x) \ge 0$ enforcing prerequisites ($q_{\text{prereq}} < q_{\text{course}}$) and scheduling rules.
 - **Arc Consistency (AC-3) & Forward Checking Complexity:**
+  With $e$ binary constraints and maximum domain size $d$, each directed arc $(X_i, X_j)$ can be re-enqueued at most $d$ times, and checking an arc takes $O(d^2)$ pairs. Thus AC-3 has worst-case time complexity **$O(e \cdot d^3)$**. Combined with **MRV** (fail-first) and **LCV** (fail-last), AC-3 drastically reduces backtracking.
 
 ### 6.2 Bayesian Networks & Conditional Independence
 - **D-separation Queries:**
+  A path between $A$ and $B$ given evidence $E$ is blocked if it contains a triple $(X, Y, Z)$ that is a **chain** ($X \to Y \to Z$) or **fork** ($X \leftarrow Y \to Z$) with $Y \in E$, or a **collider** ($X \to Y \leftarrow Z$) with neither $Y$ nor any descendant of $Y$ in $E$ (observing a collider activates *explaining away*).
 - **Exact Inference (Variable Elimination) vs. Approximate Sampling:**
+  Exact inference computes $P(Q \mid E)$ exactly in $O(n \cdot d^{w+1})$ (exponential in induced treewidth $w$), whereas **Likelihood Weighting** fixes $E$, samples non-evidence nodes in topological order, and weights samples by $\prod_{e \in E} P(e \mid \text{Parents}(e))$, converging at $O(1/\sqrt{N})$.
 
 ---
 
 ## Section 7: Car Tracking & From Language to Logic (`tracking` / `logic`)
-**Author:** Josh Kwizera
+**Author:** Muzira Joshua Kwizera (Student No. 2500703484)
 
 ### 7.1 Hidden Markov Models (HMM) & Particle Filtering
 - **Forward-Backward Algorithm Derivation:**
+  Filtering computes $P(H_t \mid e_{1:t}) \propto P(e_t \mid H_t) \sum_{h_{t-1}} P(H_t \mid h_{t-1}) P(h_{t-1} \mid e_{1:t-1})$ in $O(T |\mathcal{S}|^2)$ time over $T$ steps and $|\mathcal{S}|$ states.
 - **Particle Depletion & Importance Resampling:**
+  Particle filtering approximates $P(H_t \mid e_{1:t})$ with $N$ particles: propose via transition model, weight by Gaussian sensor likelihood $P(e_t \mid h_t^{(i)})$, and apply **systematic resampling** to prevent particle degeneracy/depletion.
 
 ### 7.2 Propositional & First-Order Logic
 - **Conjunctive Normal Form (CNF) Transformation:**
+  Eliminate $\leftrightarrow$ and $\to$, push $\neg$ inward via De Morgan's laws and double-negation elimination, and distribute $\lor$ over $\land$ to obtain a set of disjunctions of literals.
 - **Resolution Proofs and Soundness/Completeness:**
+  From $(A \lor p)$ and $(B \lor \neg p)$, Resolution derives $(A \lor B)$, which is **sound** (every model of the premises satisfies the resolvent) and **refutation-complete** ($\text{KB} \models \alpha \iff \text{CNF}(\text{KB} \land \neg\alpha) \vdash_{\text{Res}} \square$).
