@@ -42,8 +42,6 @@
 ---
 
 ## Section 2: Sentiment Classification (`sentiment`)
-**Author:** SSEWAJJE JOLLY HILTON
-## Section 2: Sentiment Classification (`sentiment`)
 **Author:** SSEWAJE JOLLY HILTON
 
 ### 2.1 Problem 1: Building Intuition
