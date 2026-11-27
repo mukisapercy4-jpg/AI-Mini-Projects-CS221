@@ -14,16 +14,16 @@
 ### Team Members & Contributions
 | # | Full Name | Student / Reg No. | Email | Assigned Theoretical Section |
 |---|-----------|-------------------|-------|------------------------------|
-| 1 | Henry | [Reg No] | [Email] | Section 1: Foundations |
-| 2 | SSEWAJE JOLLY HILTON | 25/U/03588/EVE | hiltonjolly@gmail.com | Section 2: Sentiment Classification |
-| 3 | Precious Atwiine | [Reg No] | [Email] | Section 3: Route Planning |
-| 4 | Marcus | [Reg No] | [Email] | Section 4: Controlling MountainCar |
-| 5 | [Co-Lead] | [Reg No] | [Email] | Section 4: Controlling MountainCar |
-| 6 | Jill | [Reg No] | [Email] | Section 5: Pac-Man |
-| 7 | Mukisa Percy | [Reg No] | mukisapercy4@gmail.com | Section 5: Pac-Man |
-| 8 | Joseph Mary | [Reg No] | [Email] | Section 6: Course Scheduling / Bayesian |
-| 9 | Josh Kwizera | [Reg No] | [Email] | Section 7: Car Tracking / Logic |
-| 10 | [Integration Lead] | [Reg No] | [Email] | Section 8: Compilation & Review |
+| 1 | Ssenyondo Henry | 2500703882 | ssenyondohenry644@gmail.com | Section 1: Foundations |
+| 2 | Ssewajje Jolly Hilton | 2500703588 / 25/U/03588/EVE | hiltonjolly@gmail.com | Section 2: Sentiment Classification |
+| 3 | Atwiine Precious Mwebaze | 2500703347 | preciousinshuti3@gmail.com | Section 3: Route Planning |
+| 4 | Opolot Emmanuel Marcus | 2500729501 | marcusemma480@gmail.com | Section 4: Controlling MountainCar |
+| 5 | Kabanda Joel | 2500703381 | joelkabanda45@gmail.com | Section 4: Controlling MountainCar |
+| 6 | Munanura Jill | 2500705824 | jillmunanura32@gmail.com | Section 5: Pac-Man |
+| 7 | Mukisa Percy | 2500703468 / 25/U/03468/EVE | mukisapercy4@gmail.com | Section 5: Pac-Man |
+| 8 | Joseph Mary Yiga | 2500703615 | josephmaryyiga@gmail.com | Section 6: Course Scheduling / Bayesian |
+| 9 | Muzira Joshua Kwizera | 2500703484 / 25/U/03484/EVE | joshngoboka1@gmail.com | Section 7: Car Tracking / Logic |
+| 10 | Ariko Joseph Ojangole | 2500703330 / 25/U/03330/EVE | arikolojangole@gmail.com | Section 8: Integration & Submission Lead |
 
 ---
 

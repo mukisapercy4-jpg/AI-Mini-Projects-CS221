@@ -22,16 +22,16 @@ This repository contains the collaborative implementation of the Artificial Inte
 
 ## 👥 Team Roster & Role Assignments
 
-| # | Assignment Module | Assigned Team Member(s) | Status |
-|---|-------------------|-------------------------|--------|
-| 1 | **Foundations** (`foundations`) | Henry | In Progress |
-| 2 | **Sentiment Classification** (`sentiment`) | *SSEWAJJE JOLLY HILTON* | Assigned |
-| 3 | **Route Planning** (`route`) | Precious Atwiine | In Progress |
-| 4 | **Controlling MountainCar** (`mountaincar`) | Marcus & *[Co-lead]* | In Progress |
-| 5 | **Pac-Man** (`pacman`) | Jill & Mukisa Percy | In Progress |
-| 6 | **Course Scheduling & Bayesian Networks** (`scheduling` / `bayesian`) | Joseph Mary | In Progress |
-| 7 | **Car Tracking & Logic** (`tracking` / `logic`) | Josh Kwizera | In Progress |
-| 8 | **Integration & Submission Lead** | *[To be confirmed]* | Assigned |
+| # | Assignment Module | Assigned Team Member(s) | Student / Reg No. | Status |
+|---|-------------------|-------------------------|-------------------|--------|
+| 1 | **Foundations** (`foundations`) | Ssenyondo Henry | 2500703882 | Complete |
+| 2 | **Sentiment Classification** (`sentiment`) | Ssewajje Jolly Hilton | 2500703588 (`25/U/03588/EVE`) | Complete |
+| 3 | **Route Planning** (`route`) | Atwiine Precious Mwebaze | 2500703347 | Complete |
+| 4 | **Controlling MountainCar** (`mountaincar`) | Opolot Emmanuel Marcus & Kabanda Joel | 2500729501 / 2500703381 | Complete |
+| 5 | **Pac-Man** (`pacman`) | Munanura Jill & Mukisa Percy | 2500705824 / 2500703468 (`25/U/03468/EVE`) | Complete |
+| 6 | **Course Scheduling & Bayesian Networks** (`scheduling` / `bayesian`) | Joseph Mary Yiga | 2500703615 | Complete |
+| 7 | **Car Tracking & Logic** (`tracking` / `logic`) | Muzira Joshua Kwizera | 2500703484 (`25/U/03484/EVE`) | Complete |
+| 8 | **Integration & Submission Lead** | Ariko Joseph Ojangole | 2500703330 (`25/U/03330/EVE`) | Complete |
 
 > **Integration & Submission Lead Role:** Responsible for merging code contributions into the master notebook, ensuring numbering/titling consistency, validating end-to-end execution, compiling the final theoretical PDF, and packaging the submission.
 
