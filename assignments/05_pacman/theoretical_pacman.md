@@ -1,6 +1,6 @@
 # Theoretical Analysis: Assignment 5 — Pac-Man
 
-**Authors:** Mukisa Percy & Jill  
+**Authors:** Mukisa Percy (Student No. 2500703468) & Munanura Jill (Student No. 2500705824)  
 **Course:** Makerere University — AI Mini-Projects (CS221 Aligned)
 
 ---

@@ -1,6 +1,6 @@
 # Assignment 5: Pac-Man, written answers (HW5)
 
-**Authors:** Mukisa Percy & Munanura Jill
+**Authors:** Mukisa Percy (Student No. 2500703468) & Munanura Jill (Student No. 2500705824)
 
 Setup: there are n + 1 agents a_0, ..., a_n, where a_0 is Pac-Man (MAX) and a_1, ..., a_n are ghosts. One depth d consists of Pac-Man and every ghost each moving once, so the depth drops only after the last ghost a_n has moved. Notation: IsEnd(s), Utility(s), Eval(s), Player(s), Actions(s), Succ(s, a).
 

@@ -131,7 +131,7 @@ A review where character n-grams outperform word features: *"I hated this movie.
 ---
 
 ## Section 5: Pac-Man Multi-Agent Adversarial Search (`pacman`)
-**Authors:** Mukisa Percy & Jill
+**Authors:** Mukisa Percy (Student No. 2500703468) & Munanura Jill (Student No. 2500705824)
 
 ### 5.1 Multi-Agent Minimax Game Tree Formulation
 In the Pac-Man environment, games are zero-sum with one maximizing agent (Pac-Man, index $0$) and $k$ minimizing adversaries (Ghosts, indices $1, \dots, k$). One search ply corresponds to a sequence of $1 + k$ agent moves.
