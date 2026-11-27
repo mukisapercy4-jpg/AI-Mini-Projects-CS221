@@ -3,25 +3,30 @@ import collections
 from typing import List, Tuple, Dict, Callable
 
 def extract_word_features(x: str) -> Dict[str, float]:
+    """Convert a text string into sparse word-count features."""
     features = collections.defaultdict(float)
     for word in x.split():
         features[word] += 1.0
     return dict(features)
 
 def dot_product(d1: Dict[str, float], d2: Dict[str, float]) -> float:
+    """Compute the inner product of two sparse vectors."""
     if len(d1) > len(d2):
         d1, d2 = d2, d1
     return sum(val * d2.get(key, 0.0) for key, val in d1.items())
 
 def increment_sparse_vector(d1: Dict[str, float], scale: float, d2: Dict[str, float]) -> None:
+    """Update a sparse vector in place by adding a scaled second vector."""
     for key, val in d2.items():
         d1[key] = d1.get(key, 0.0) + scale * val
 
 def learn_predictor_sgd(train_data, dev_data, num_epochs=15, eta=0.05):
+    """Train a linear sentiment classifier with hinge-loss stochastic gradient updates."""
     w = {}
     train_errors, dev_errors = [], []
     
     def evaluate(w, data):
+        """Return the fraction of examples misclassified by the current weights."""
         errors = 0
         for phi, y in data:
             score = dot_product(w, phi)
@@ -42,7 +47,9 @@ def learn_predictor_sgd(train_data, dev_data, num_epochs=15, eta=0.05):
     return w, train_errors, dev_errors
 
 def extract_character_features(n: int) -> Callable[[str], Dict[str, float]]:
+    """Create an extractor that counts character n-grams of the requested length."""
     def extract(x: str) -> Dict[str, float]:
+        """Count overlapping character n-grams after removing whitespace."""
         clean_x = x.replace(" ", "").replace("\t", "")
         features = collections.defaultdict(float)
         for i in range(len(clean_x) - n + 1):
@@ -51,6 +58,7 @@ def extract_character_features(n: int) -> Callable[[str], Dict[str, float]]:
     return extract
 
 def kmeans_clustering(points, k=2, num_iters=10, seed=42):
+    """Cluster sparse vectors and return centroids, assignments, and distortion history."""
     random.seed(seed)
     if not points: return [], [], []
     

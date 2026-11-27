@@ -15,6 +15,7 @@ class CSP:
     """
 
     def __init__(self):
+        """Initialize this object's state and configuration."""
         self.variables: List[Any] = []
         self.domains: Dict[Any, List[Any]] = {}
         self.unary_factors: Dict[Any, List[Callable[[Any], float]]] = collections.defaultdict(list)
@@ -22,14 +23,17 @@ class CSP:
         self.neighbors: Dict[Any, set] = collections.defaultdict(set)
 
     def add_variable(self, var: Any, domain: List[Any]) -> None:
+        """Register a variable and its domain in the constraint problem."""
         if var not in self.variables:
             self.variables.append(var)
         self.domains[var] = list(domain)
 
     def add_unary_factor(self, var: Any, factor: Callable[[Any], float]) -> None:
+        """Add a unary factor that scores individual values of a variable."""
         self.unary_factors[var].append(factor)
 
     def add_binary_factor(self, var1: Any, var2: Any, factor: Callable[[Any, Any], float]) -> None:
+        """Add a binary factor that scores pairs of variable values."""
         self.binary_factors[(var1, var2)].append(factor)
         self.binary_factors[(var2, var1)].append(lambda v2, v1, f=factor: f(v1, v2))
         self.neighbors[var1].add(var2)
@@ -43,6 +47,7 @@ class BacktrackingSearch:
     """
 
     def __init__(self, csp: CSP, mrv: bool = True, lcv: bool = True, ac3: bool = True):
+        """Initialize this object's state and configuration."""
         self.csp = csp
         self.mrv = mrv
         self.lcv = lcv
@@ -54,6 +59,7 @@ class BacktrackingSearch:
         self.all_assignments: List[Dict[Any, Any]] = []
 
     def _get_delta_weight(self, assignment: Dict[Any, Any], var: Any, val: Any) -> float:
+        """Compute the factor-weight change from assigning one value."""
         weight = 1.0
         for f in self.csp.unary_factors[var]:
             weight *= f(val)
@@ -68,17 +74,20 @@ class BacktrackingSearch:
         return weight
 
     def _select_unassigned_variable(self, assignment: Dict[Any, Any], domains: Dict[Any, List[Any]]) -> Any:
+        """Choose the next variable, using MRV when enabled."""
         unassigned = [v for v in self.csp.variables if v not in assignment]
         if not self.mrv:
             return unassigned[0]
         return min(unassigned, key=lambda v: len(domains[v]))
 
     def _order_domain_values(self, var: Any, assignment: Dict[Any, Any], domains: Dict[Any, List[Any]]) -> List[Any]:
+        """Order a variable domain, using LCV when enabled."""
         vals = list(domains[var])
         if not self.lcv:
             return vals
 
         def conflicts(val: Any) -> int:
+            """Return conflicts that would arise from the proposed course quarter."""
             eliminated = 0
             for nbr in self.csp.neighbors[var]:
                 if nbr not in assignment:
@@ -92,6 +101,7 @@ class BacktrackingSearch:
         return sorted(vals, key=conflicts)
 
     def _arc_consistency_check(self, domains: Dict[Any, List[Any]], queue: Optional[List[Tuple[Any, Any]]] = None) -> bool:
+        """Revise neighboring domains until AC-3 reaches consistency or detects failure."""
         if queue is None:
             q = collections.deque(
                 (xi, xj) for xi in self.csp.variables for xj in self.csp.neighbors[xi]
@@ -110,6 +120,7 @@ class BacktrackingSearch:
         return True
 
     def _revise(self, domains: Dict[Any, List[Any]], xi: Any, xj: Any) -> bool:
+        """Remove values that have no supporting value in the neighboring domain."""
         revised = False
         new_domain = []
         for vi in domains[xi]:
@@ -130,6 +141,7 @@ class BacktrackingSearch:
         return revised
 
     def solve(self, find_all: bool = False) -> Optional[Dict[Any, Any]]:
+        """Run the configured backtracking search and return its best assignment."""
         self.num_assignments = 0
         self.num_backtracks = 0
         self.optimal_assignment = None
@@ -159,6 +171,7 @@ class BacktrackingSearch:
         domains: Dict[Any, List[Any]],
         find_all: bool,
     ) -> bool:
+        """Explore assignments recursively while enforcing factors and lookahead."""
         if len(assignment) == len(self.csp.variables):
             self.all_assignments.append(dict(assignment))
             if weight > self.optimal_weight:
@@ -221,19 +234,23 @@ class BayesianNetwork:
     """
 
     def __init__(self, nodes: List[str], parents: Dict[str, List[str]], cpts: Dict[str, Dict[Tuple[bool, ...], float]]):
+        """Initialize this object's state and configuration."""
         self.nodes = nodes
         self.parents = parents
         self.cpts = cpts
 
     def p_true(self, node: str, assignment: Dict[str, bool]) -> float:
+        """Return the conditional probability that a node is true."""
         parent_vals = tuple(assignment[p] for p in self.parents[node])
         return self.cpts[node][parent_vals]
 
     def p(self, node: str, val: bool, assignment: Dict[str, bool]) -> float:
+        """Return the node probability for a specific Boolean value and context."""
         pt = self.p_true(node, assignment)
         return pt if val else (1.0 - pt)
 
     def _enumerate_all(self, variables: List[str], evidence: Dict[str, bool]) -> float:
+        """Sum joint probabilities over all unobserved network variables."""
         if not variables:
             return 1.0
         first, rest = variables[0], variables[1:]

@@ -18,6 +18,7 @@ class DiscretizedMountainCarMDP:
     Discretizes continuous (position, velocity) state space into discrete grid bins.
     """
     def __init__(self, x_bins: int = 15, v_bins: int = 15):
+        """Initialize this object's state and configuration."""
         self.x_bins = x_bins
         self.v_bins = v_bins
         self.env = MountainCarEnv()
@@ -40,6 +41,7 @@ class DiscretizedMountainCarMDP:
         return (x, v)
 
     def is_terminal(self, state: Tuple[int, int]) -> bool:
+        """Return whether a discretized state lies in the goal region."""
         ix, _ = state
         x_thresh = (self.env.GOAL_POSITION - self.env.MIN_POSITION) / (self.env.MAX_POSITION - self.env.MIN_POSITION)
         return ix >= int(x_thresh * self.x_bins)
@@ -89,10 +91,12 @@ class TileFeatureExtractor:
     Multi-resolution tiling feature extractor for continuous MountainCar state.
     """
     def __init__(self, num_tilings: int = 4, bins_per_tile: int = 8):
+        """Initialize this object's state and configuration."""
         self.num_tilings = num_tilings
         self.bins = bins_per_tile
 
     def extract_features(self, state: Tuple[float, float], action_idx: int) -> Dict[str, float]:
+        """Encode a state-action pair with active tile-coding features."""
         x, v = state
         x_norm = (x - (-1.2)) / (0.6 - (-1.2))
         v_norm = (v + 0.07) / 0.14
@@ -120,6 +124,7 @@ class QLearningAgent:
         gamma: float = 0.99,
         epsilon: float = 0.1
     ):
+        """Initialize this object's state and configuration."""
         self.feature_extractor = feature_extractor
         self.alpha = alpha
         self.gamma = gamma
@@ -127,6 +132,7 @@ class QLearningAgent:
         self.weights: Dict[str, float] = collections.defaultdict(float)
 
     def get_q_value(self, state: Tuple[float, float], action_idx: int) -> float:
+        """Evaluate the linear action-value estimate for a state and action."""
         phi = self.feature_extractor.extract_features(state, action_idx)
         return sum(self.weights[k] * v for k, v in phi.items())
 

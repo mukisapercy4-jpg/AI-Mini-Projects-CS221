@@ -11,6 +11,7 @@ from datetime import datetime
 
 REQUIRED_FILES = [
     "notebooks/ai_coursework_all_assignments.ipynb",
+    "theoretical/theoretical_solutions.pdf",
 ]
 
 RECOMMENDED_FILES = [
@@ -43,6 +44,8 @@ def bundle():
         "notebooks",
         "theoretical",
         "assignments",
+        "scripts",
+        "docs",
         "README.md",
         "requirements.txt"
     ]

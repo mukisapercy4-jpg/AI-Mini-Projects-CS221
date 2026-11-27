@@ -34,7 +34,8 @@ def run_experiments():
     extractor = TileFeatureExtractor(num_tilings=4, bins_per_tile=8)
     agent = QLearningAgent(extractor, alpha=0.08, gamma=0.99, epsilon=0.15)
 
-    num_episodes = 60
+    # Train long enough for the tile-coded policy to learn reliable hill-climbing.
+    num_episodes = 500
     max_steps_per_episode = 200
     episode_rewards = []
 
@@ -44,7 +45,7 @@ def run_experiments():
         total_reward = 0.0
         
         # Decay epsilon
-        agent.epsilon = max(0.02, 0.20 * (0.96 ** ep))
+        agent.epsilon = max(0.02, 0.20 * (0.995 ** ep))
 
         for step in range(max_steps_per_episode):
             action = agent.choose_action(state, explore=True)
@@ -56,12 +57,30 @@ def run_experiments():
                 break
 
         episode_rewards.append(total_reward)
-        if (ep + 1) % 15 == 0:
-            avg_rew = sum(episode_rewards[-15:]) / 15.0
-            print(f"  Episode: {ep+1:3d} | Avg Reward (last 15): {avg_rew:7.1f} | Epsilon: {agent.epsilon:.3f}")
+        if (ep + 1) % 100 == 0:
+            avg_rew = sum(episode_rewards[-100:]) / 100.0
+            print(f"  Episode: {ep+1:3d} | Avg Reward (last 100): {avg_rew:7.1f} | Epsilon: {agent.epsilon:.3f}")
 
     rl_time = (time.perf_counter() - t_rl) * 1000.0
+    # Evaluate the learned policy without exploration on held-out random starts.
+    agent.epsilon = 0.0
+    evaluation_episodes = 100
+    successes = 0
+    evaluation_steps = []
+    for _ in range(evaluation_episodes):
+        state = env.reset()
+        for step in range(max_steps_per_episode):
+            action = agent.choose_action(state, explore=False)
+            state, _, done, _ = env.step(action)
+            if done:
+                successes += 1
+                evaluation_steps.append(step + 1)
+                break
+
+    success_rate = successes / evaluation_episodes
+    mean_steps = sum(evaluation_steps) / len(evaluation_steps) if evaluation_steps else float("nan")
     print(f"\n[SUMMARY] Trained {num_episodes} episodes in {rl_time:.2f} ms | Learned {len(agent.weights)} active tile weights")
+    print(f"[EVALUATION] Greedy success rate: {successes}/{evaluation_episodes} ({success_rate:.1%}) | Mean steps on successes: {mean_steps:.1f}")
     print("=" * 65)
 
 if __name__ == "__main__":

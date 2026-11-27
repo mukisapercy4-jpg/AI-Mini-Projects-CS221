@@ -8,7 +8,7 @@
 
 ## 📌 Project Overview & Requirements
 
-This repository contains the collaborative implementation of the Artificial Intelligence Mini-Project assignments. 
+This repository contains the team's Artificial Intelligence Mini-Project coursework, assignment implementations, and combined submission files. Sections 6 and 7 group course scheduling with Bayesian networks and car tracking with logic, in line with the team role assignments.
 
 ### Mandatory Submission Rules (Per Course Instructions)
 1. **Theoretical Component:** All theoretical questions across all assignments must be compiled into **one single PDF document** (`theoretical_solutions.pdf`).
@@ -48,7 +48,8 @@ Artificial_Intelligence_Project_Work/
 │   └── ai_coursework_all_assignments.ipynb   # Master unified submission notebook
 ├── theoretical/
 │   ├── theoretical_part_master.md             # Master theoretical draft
-│   └── theoretical_part_master.tex            # LaTeX template for single PDF export
+│   ├── theoretical_part_master.tex            # LaTeX source for the theory document
+│   └── theoretical_solutions.pdf              # Combined theory submission
 ├── assignments/                              # Isolated staging folders for team members
 │   ├── 01_foundations/
 │   ├── 02_sentiment/
@@ -58,7 +59,10 @@ Artificial_Intelligence_Project_Work/
 │   ├── 06_course_scheduling/
 │   └── 07_car_tracking/
 ├── scripts/
-│   └── bundle_submission.py                  # Script to package submission zip
+│   ├── generate_master_notebook.py           # Build the combined notebook
+│   ├── execute_master_notebook.py            # Run cells and save results
+│   ├── build_theoretical_pdf.py               # Typeset the combined theory PDF
+│   └── bundle_submission.py                  # Package the submission zip
 └── docs/
     └── SUBMISSION_CHECKLIST.md               # Final pre-submission verification
 ```
@@ -89,7 +93,14 @@ To avoid merge conflicts on the master notebook:
 2. Write unit tests, helper functions, and writeups in your folder.
 3. Coordinate with the **Integration Lead** to port validated solutions into `notebooks/ai_coursework_all_assignments.ipynb` and `theoretical/theoretical_part_master.tex` / `.md`.
 
-### 3. Generate Submission Package
+### 3. Rebuild the Combined Deliverables
+```bash
+python scripts/generate_master_notebook.py
+python scripts/execute_master_notebook.py
+python scripts/build_theoretical_pdf.py
+```
+
+### 4. Generate Submission Package
 ```bash
 python scripts/bundle_submission.py
 ```

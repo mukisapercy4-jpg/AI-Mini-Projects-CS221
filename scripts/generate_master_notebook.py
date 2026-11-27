@@ -1,329 +1,110 @@
+"""Build the single, executable coursework notebook from assignment sources."""
+
+from __future__ import annotations
+
 import json
-import os
+from pathlib import Path
 
-notebook = {
-    "cells": [
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "# Makerere University - Department of Computer Science\n",
-                "## Artificial Intelligence Mini-Project Assignments (CS221 Aligned)\n",
-                "---\n",
-                "### 📋 Submission Details\n",
-                "- **Course Portal:** [MUELE Section 230921](https://muele.mak.ac.ug/course/section.php?id=230921)\n",
-                "- **Reference Coursework:** [Stanford CS221: Principles and Techniques](https://stanford-cs221.github.io/spring2026/#coursework)\n",
-                "- **Submission Deadline:** 5th December 2026\n",
-                "- **Submission Format:** Single Jupyter Notebook (.ipynb) + Single Theoretical Document (.pdf)\n",
-                "\n",
-                "### 👥 Group Members & Role Assignments\n",
-                "| # | Full Name | Student / Reg No. | Email | Assigned Module |\n",
-                "|---|-----------|-------------------|-------|-----------------|\n",
-                "| 1 | Henry | [Reg No] | [Email] | 1. Foundations |\n",
-                "| 2 | [Member Name] | [Reg No] | [Email] | 2. Sentiment Classification |\n",
-                "| 3 | Precious Atwiine | [Reg No] | [Email] | 3. Route Planning |\n",
-                "| 4 | Marcus | [Reg No] | [Email] | 4. Controlling MountainCar |\n",
-                "| 5 | [Co-Lead] | [Reg No] | [Email] | 4. Controlling MountainCar |\n",
-                "| 6 | Jill | [Reg No] | [Email] | 5. Pac-Man |\n",
-                "| 7 | Mukisa Percy | [Reg No] | mukisapercy4@gmail.com | 5. Pac-Man |\n",
-                "| 8 | Joseph Mary | [Reg No] | [Email] | 6. Course Scheduling / Bayesian |\n",
-                "| 9 | Josh Kwizera | [Reg No] | [Email] | 7. Car Tracking / Logic |\n",
-                "| 10 | [Integration Lead] | [Reg No] | [Email] | 8. Integration & Submission Lead |\n"
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# =============================================================================\n",
-                "# GLOBAL IMPORTS AND CONFIGURATION\n",
-                "# =============================================================================\n",
-                "import os\n",
-                "import sys\n",
-                "import math\n",
-                "import random\n",
-                "import collections\n",
-                "from typing import List, Tuple, Dict, Set, Any, Optional\n",
-                "\n",
-                "# Numerical and visualization tools\n",
-                "import numpy as np\n",
-                "import matplotlib.pyplot as plt\n",
-                "\n",
-                "# Set seeds for deterministic reproducibility\n",
-                "random.seed(42)\n",
-                "np.random.seed(42)\n",
-                "\n",
-                "print(\"Global libraries imported successfully. System ready.\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "---\n",
-                "## 1. Assignment 1: Foundations (`foundations`)\n",
-                "**Assigned to:** Henry  \n",
-                "**Topics Covered:** Python fundamentals, sparse vector operations, math optimization, basic probability, gradient computation."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# -----------------------------------------------------------------------------\n",
-                "# ASSIGNMENT 1: FOUNDATIONS IMPLEMENTATION\n",
-                "# -----------------------------------------------------------------------------\n",
-                "\n",
-                "def dot_product(d1: Dict[str, float], d2: Dict[str, float]) -> float:\n",
-                "    \"\"\"\n",
-                "    Computes the dot product of two sparse vectors represented as dictionaries.\n",
-                "    \"\"\"\n",
-                "    if len(d1) > len(d2):\n",
-                "        d1, d2 = d2, d1\n",
-                "    return sum(val * d2.get(key, 0.0) for key, val in d1.items())\n",
-                "\n",
-                "def increment_sparse_vector(d1: Dict[str, float], scale: float, d2: Dict[str, float]) -> None:\n",
-                "    \"\"\"\n",
-                "    Performs in-place operation: d1 += scale * d2\n",
-                "    \"\"\"\n",
-                "    for key, val in d2.items():\n",
-                "        d1[key] = d1.get(key, 0.0) + scale * val\n",
-                "\n",
-                "print(\"Foundations module loaded.\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "---\n",
-                "## 2. Assignment 2: Sentiment Classification (`sentiment`)\n",
-                "**Assigned to:** [Open / Assigned Member]  \n",
-                "**Topics Covered:** Feature extraction, linear predictors, stochastic gradient descent (SGD), loss functions, k-means clustering."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# -----------------------------------------------------------------------------\n",
-                "# ASSIGNMENT 2: SENTIMENT CLASSIFICATION IMPLEMENTATION\n",
-                "# -----------------------------------------------------------------------------\n",
-                "\n",
-                "def extract_word_features(x: str) -> Dict[str, float]:\n",
-                "    \"\"\"\n",
-                "    Extracts word frequency features from a text string x.\n",
-                "    \"\"\"\n",
-                "    features = collections.defaultdict(float)\n",
-                "    for word in x.split():\n",
-                "        features[word] += 1.0\n",
-                "    return dict(features)\n",
-                "\n",
-                "print(\"Sentiment classification module loaded.\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "---\n",
-                "## 3. Assignment 3: Route Planning (`route`)\n",
-                "**Assigned to:** Precious Atwiine  \n",
-                "**Topics Covered:** State-space search, Uniform Cost Search (Dijkstra), A* Search, heuristic design, landmark heuristics."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# -----------------------------------------------------------------------------\n",
-                "# ASSIGNMENT 3: ROUTE PLANNING IMPLEMENTATION\n",
-                "# -----------------------------------------------------------------------------\n",
-                "\n",
-                "class SearchProblem:\n",
-                "    def start_state(self):\n",
-                "        raise NotImplementedError\n",
-                "    def is_end(self, state):\n",
-                "        raise NotImplementedError\n",
-                "    def successors_and_costs(self, state):\n",
-                "        raise NotImplementedError\n",
-                "\n",
-                "print(\"Route planning module loaded.\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "---\n",
-                "## 4. Assignment 4: Controlling MountainCar (`mountaincar`)\n",
-                "**Assigned to:** Marcus & Co-Lead  \n",
-                "**Topics Covered:** Markov Decision Processes (MDPs), Value Iteration, Q-Learning, Function Approximation, Exploration vs Exploitation."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# -----------------------------------------------------------------------------\n",
-                "# ASSIGNMENT 4: CONTROLLING MOUNTAINCAR IMPLEMENTATION\n",
-                "# -----------------------------------------------------------------------------\n",
-                "\n",
-                "class MDP:\n",
-                "    def states(self):\n",
-                "        raise NotImplementedError\n",
-                "    def actions(self, state):\n",
-                "        raise NotImplementedError\n",
-                "    def transition_prob_and_reward(self, state, action):\n",
-                "        raise NotImplementedError\n",
-                "    def discount(self):\n",
-                "        return 1.0\n",
-                "\n",
-                "print(\"MountainCar MDP/RL module loaded.\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "---\n",
-                "## 5. Assignment 5: Pac-Man (`pacman`)\n",
-                "**Assigned to:** Jill & Mukisa Percy  \n",
-                "**Topics Covered:** Adversarial search, Minimax, Alpha-Beta Pruning, Expectimax, Evaluation functions for multi-agent environments."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# -----------------------------------------------------------------------------\n",
-                "# ASSIGNMENT 5: PAC-MAN MULTI-AGENT ADVERSARIAL SEARCH\n",
-                "# -----------------------------------------------------------------------------\n",
-                "\n",
-                "class MultiAgentSearchAgent:\n",
-                "    def __init__(self, depth=2, evaluation_function=None):\n",
-                "        self.depth = depth\n",
-                "        self.evaluation_function = evaluation_function\n",
-                "\n",
-                "print(\"Pac-Man adversarial search module loaded.\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "---\n",
-                "## 6. Assignment 6: Course Scheduling & Bayesian Networks (`scheduling` / `bayesian`)\n",
-                "**Assigned to:** Joseph Mary  \n",
-                "**Topics Covered:** Constraint Satisfaction Problems (CSP), Backtracking search, Arc Consistency (AC-3), Bayesian Networks, Probabilistic Inference."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# -----------------------------------------------------------------------------\n",
-                "# ASSIGNMENT 6: CSP COURSE SCHEDULING & BAYESIAN INFERENCE\n",
-                "# -----------------------------------------------------------------------------\n",
-                "\n",
-                "class CSP:\n",
-                "    def __init__(self, variables, domains, constraints):\n",
-                "        self.variables = variables\n",
-                "        self.domains = domains\n",
-                "        self.constraints = constraints\n",
-                "\n",
-                "print(\"Course scheduling and Bayesian networks module loaded.\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "---\n",
-                "## 7. Assignment 7: Car Tracking & From Language to Logic (`tracking` / `logic`)\n",
-                "**Assigned to:** Josh Kwizera  \n",
-                "**Topics Covered:** Hidden Markov Models (HMM), Exact Inference, Particle Filtering, Propositional & First-Order Logic, Model Checking, Resolution."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "# -----------------------------------------------------------------------------\n",
-                "# ASSIGNMENT 7: CAR TRACKING (HMM) & LOGIC\n",
-                "# -----------------------------------------------------------------------------\n",
-                "\n",
-                "class ParticleFilter:\n",
-                "    def __init__(self, num_particles=1000):\n",
-                "        self.num_particles = num_particles\n",
-                "        self.particles = []\n",
-                "\n",
-                "print(\"Car tracking and logic module loaded.\")"
-            ]
-        },
-        {
-            "cell_type": "markdown",
-            "metadata": {},
-            "source": [
-                "---\n",
-                "## 8. Integration & Verification Summary\n",
-                "**Lead:** Integration & Submission Lead  \n",
-                "**Status:** All assignment blocks tested for end-to-end execution without errors."
-            ]
-        },
-        {
-            "cell_type": "code",
-            "execution_count": None,
-            "metadata": {},
-            "outputs": [],
-            "source": [
-                "print(\"=== MASTER NOTEBOOK INTEGRITY CHECK ===\")\n",
-                "print(\"All 7 assignment modules integrated.\")\n",
-                "print(\"Status: READY FOR EVALUATION\")"
-            ]
-        }
-    ],
-    "metadata": {
-        "kernelspec": {
-            "display_name": "Python 3",
-            "language": "python",
-            "name": "python3"
-        },
-        "language_info": {
-            "codemirror_mode": {
-                "name": "ipython",
-                "version": 3
-            },
-            "file_extension": ".py",
-            "mimetype": "text/x-python",
-            "name": "python",
-            "nbformat_minor": 2,
-            "pygments_lexer": "ipython3",
-            "version": "3.14.0"
-        }
-    },
-    "nbformat": 4,
-    "nbformat_minor": 5
-}
 
-os.makedirs("notebooks", exist_ok=True)
-with open("notebooks/ai_coursework_all_assignments.ipynb", "w", encoding="utf-8") as f:
-    json.dump(notebook, f, indent=2)
+ROOT = Path(__file__).resolve().parents[1]
+NOTEBOOK_PATH = ROOT / "notebooks" / "ai_coursework_all_assignments.ipynb"
 
-print("Master notebook generated successfully at notebooks/ai_coursework_all_assignments.ipynb")
+TEAM = """| # | Full name | Student / registration number | Email | Assignment / role |
+|---|---|---|---|---|
+| 1 | Ssenyondo Henry | 2500703882 | ssenyondohenry644@gmail.com | 1. Foundations |
+| 2 | Ssewajje Jolly Hilton | 2500703588 / 25/U/03588/EVE | hiltonjolly@gmail.com | 2. Sentiment classification |
+| 3 | Atwiine Precious Mwebaze | 2500703347 | preciousinshuti3@gmail.com | 3. Route planning |
+| 4 | Opolot Emmanuel Marcus | 2500729501 | marcusemma480@gmail.com | 4. MountainCar |
+| 5 | Kabanda Joel | 2500703381 | joelkabanda45@gmail.com | 4. MountainCar |
+| 6 | Munanura Jill | 2500705824 | jillmunanura32@gmail.com | 5. Pac-Man |
+| 7 | Mukisa Percy | 2500703468 / 25/U/03468/EVE | mukisapercy4@gmail.com | 5. Pac-Man |
+| 8 | Joseph Mary Yiga | 2500703615 | josephmaryyiga@gmail.com | 6. Course scheduling and Bayesian networks |
+| 9 | Muzira Joshua Kwizera | 2500703484 / 25/U/03484/EVE | joshngoboka1@gmail.com | 7. Car tracking and logic |
+| 10 | Ariko Joseph Ojangole | 2500703330 / 25/U/03330/EVE | arikolojangole@gmail.com | Integration and submission lead |"""
+
+ASSIGNMENTS = [
+    ("01_foundations", "submission_foundations.py", "test_foundations.py", "run_foundations_experiments.py", "1. Foundations", "Sparse vectors, text helpers, regression gradients, and probability MLE."),
+    ("02_sentiment", "submission_sentiment.py", "test_sentiment.py", "run_sentiment_experiments.py", "2. Sentiment Classification", "Word and character features, hinge-loss SGD, evaluation, and k-means."),
+    ("03_route_planning", "submission_route.py", "test_route.py", "run_route_experiments.py", "3. Route Planning", "Uniform-cost search, A*, Euclidean distance, and landmark heuristics."),
+    ("04_mountaincar", "submission_mountaincar.py", "test_mountaincar.py", "run_mountaincar_experiments.py", "4. Controlling MountainCar", "Discretized value iteration, tile coding, and Q-learning."),
+    ("05_pacman", "submission_pacman.py", "test_pacman.py", "run_pacman_experiments.py", "5. Pac-Man", "Reflex, minimax, alpha-beta, expectimax, and state evaluation."),
+    ("06_course_scheduling", "submission_scheduling.py", "test_scheduling.py", "run_scheduling_experiments.py", "6. Course Scheduling and Bayesian Networks", "CSP modeling, backtracking, MRV/LCV, AC-3, and probabilistic inference."),
+    ("07_car_tracking", "submission_car_tracking.py", "test_car_tracking.py", "run_car_tracking_experiments.py", "7. Car Tracking and Logic", "Exact HMM inference, particle filtering, CNF conversion, and resolution."),
+]
+
+
+def markdown(source: str) -> dict:
+    return {"cell_type": "markdown", "metadata": {}, "source": source.splitlines(keepends=True)}
+
+
+def code(source: str) -> dict:
+    return {
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": source.splitlines(keepends=True),
+    }
+
+
+def build() -> None:
+    cells = [
+        markdown(
+            "# Makerere University - Department of Computer Science\n"
+            "## Artificial Intelligence Mini-Project Coursework\n\n"
+            "**Course:** CS221-aligned AI coursework  \n"
+            "**Submission deadline:** 5 December 2026  \n"
+            "**Required programming deliverable:** this single executable notebook\n\n"
+            "### Team and assignment roles\n\n" + TEAM +
+            "\n\n### How to run\n\n"
+            "Run this notebook from top to bottom. Each assignment implementation is included in its own code cell, followed by its local verification and experiment cells. The setup cell locates the project folder and makes the supplied assignment engines available."
+        ),
+        code(
+            "from pathlib import Path\n"
+            "import os, runpy, sys\n"
+            "ROOT = next((p.resolve() for p in (Path.cwd(), *Path.cwd().parents) if (p / 'assignments').is_dir()), None)\n"
+            "if ROOT is None:\n    raise FileNotFoundError('Open this notebook from inside the coursework project folder.')\n"
+            "for folder in sorted((ROOT / 'assignments').iterdir()):\n"
+            "    if folder.is_dir():\n        sys.path.insert(0, str(folder))\n"
+            "print(f'Project folder: {ROOT}')\n"
+            "print('Assignment support files are ready.')"
+        ),
+    ]
+    for folder, filename, test_filename, experiment_filename, title, summary in ASSIGNMENTS:
+        source_path = ROOT / "assignments" / folder / filename
+        test_path = ROOT / "assignments" / folder / test_filename
+        experiment_path = ROOT / "assignments" / folder / experiment_filename
+        cells.append(markdown(f"---\n## {title}\n\n{summary}\n\n**Implementation source:** `{source_path.relative_to(ROOT).as_posix()}`"))
+        cells.append(code(source_path.read_text(encoding="utf-8")))
+        if test_path.is_file():
+            cells.append(markdown("### Local verification\n\nRun the assignment's assertion-based checks."))
+            cells.append(code(f"runpy.run_path(str(ROOT / {test_path.relative_to(ROOT).as_posix()!r}), run_name='__main__')"))
+        if experiment_path.is_file():
+            cells.append(markdown("### Experiment and results\n\nRun the supplied deterministic experiment or benchmark and display its measured results."))
+            runner = "run_benchmarks" if folder in {"01_foundations", "05_pacman"} else "run_experiments"
+            call = "experiment['run_benchmarks'](num_trials=3)" if folder == "05_pacman" else f"experiment[{runner!r}]()"
+            cells.append(code(
+                f"experiment = runpy.run_path(str(ROOT / {experiment_path.relative_to(ROOT).as_posix()!r}))\n"
+                f"{call}"
+            ))
+    cells.append(markdown(
+        "---\n## Integration summary\n\n"
+        "The seven implementation modules and their local checks are included above. "
+        "A successful full run should leave no code cell in an error state. Reported measurements are generated by the supplied experiment scripts and depend on the execution environment."
+    ))
+    notebook = {
+        "cells": cells,
+        "metadata": {
+            "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+            "language_info": {"name": "python", "file_extension": ".py", "mimetype": "text/x-python"},
+        },
+        "nbformat": 4,
+        "nbformat_minor": 5,
+    }
+    NOTEBOOK_PATH.parent.mkdir(parents=True, exist_ok=True)
+    NOTEBOOK_PATH.write_text(json.dumps(notebook, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Generated {NOTEBOOK_PATH.relative_to(ROOT)} with {len(cells)} cells.")
+
+
+if __name__ == "__main__":
+    build()

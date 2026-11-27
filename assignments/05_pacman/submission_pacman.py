@@ -23,9 +23,11 @@ class Agent:
     An agent must define a getAction method.
     """
     def __init__(self, index: int = 0):
+        """Initialize this object's state and configuration."""
         self.index = index
 
     def getAction(self, gameState: Any) -> str:
+        """Select an action by backing up the game tree to the configured search depth."""
         raise NotImplementedError
 
 
@@ -34,6 +36,7 @@ class MultiAgentSearchAgent(Agent):
     Common base class for multi-agent search agents (Minimax, AlphaBeta, Expectimax).
     """
     def __init__(self, evalFn: str = 'scoreEvaluationFunction', depth: int = 2):
+        """Initialize this object's state and configuration."""
         super().__init__(index=0)
         self.evaluationFunction = evalFn
         self.depth = int(depth)
@@ -115,6 +118,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
         def value(state: Any, agentIndex: int, currentDepth: int) -> Tuple[float, Optional[str]]:
             # Terminal states check
+            """Return the backed-up game-tree value for a state, depth, and agent turn."""
             if state.isWin() or state.isLose() or currentDepth == self.depth:
                 return self.getEval(state), None
 
@@ -128,6 +132,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
                 return minValue(state, agentIndex, currentDepth, nextAgent, nextDepth)
 
         def maxValue(state, agentIndex, currentDepth, nextAgent, nextDepth):
+            """Return the maximum successor value at a Pac-Man decision node."""
             bestScore = -float('inf')
             bestAction = None
             legalActions = state.getLegalActions(agentIndex)
@@ -143,6 +148,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
             return bestScore, bestAction
 
         def minValue(state, agentIndex, currentDepth, nextAgent, nextDepth):
+            """Return the minimum successor value at a ghost decision node."""
             bestScore = float('inf')
             bestAction = None
             legalActions = state.getLegalActions(agentIndex)
@@ -161,6 +167,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         return chosenAction or "Stop"
 
     def getEval(self, state: Any) -> float:
+        """Return the configured evaluation of a game state."""
         if callable(self.evaluationFunction):
             return self.evaluationFunction(state)
         return state.getScore()
@@ -180,6 +187,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using alpha-beta pruning.
         """
         def value(state: Any, agentIndex: int, currentDepth: int, alpha: float, beta: float) -> Tuple[float, Optional[str]]:
+            """Return the backed-up game-tree value for a state, depth, and agent turn."""
             if state.isWin() or state.isLose() or currentDepth == self.depth:
                 return self.getEval(state), None
 
@@ -193,6 +201,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 return minValue(state, agentIndex, currentDepth, nextAgent, nextDepth, alpha, beta)
 
         def maxValue(state, agentIndex, currentDepth, nextAgent, nextDepth, alpha, beta):
+            """Return the maximum successor value at a Pac-Man decision node."""
             bestScore = -float('inf')
             bestAction = None
             legalActions = state.getLegalActions(agentIndex)
@@ -211,6 +220,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             return bestScore, bestAction
 
         def minValue(state, agentIndex, currentDepth, nextAgent, nextDepth, alpha, beta):
+            """Return the minimum successor value at a ghost decision node."""
             bestScore = float('inf')
             bestAction = None
             legalActions = state.getLegalActions(agentIndex)
@@ -234,6 +244,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         return chosenAction or "Stop"
 
     def getEval(self, state: Any) -> float:
+        """Return the configured evaluation of a game state."""
         if callable(self.evaluationFunction):
             return self.evaluationFunction(state)
         return state.getScore()
@@ -253,6 +264,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         Returns the expectimax action from current gameState.
         """
         def value(state: Any, agentIndex: int, currentDepth: int) -> Tuple[float, Optional[str]]:
+            """Return the backed-up game-tree value for a state, depth, and agent turn."""
             if state.isWin() or state.isLose() or currentDepth == self.depth:
                 return self.getEval(state), None
 
@@ -266,6 +278,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
                 return expValue(state, agentIndex, currentDepth, nextAgent, nextDepth)
 
         def maxValue(state, agentIndex, currentDepth, nextAgent, nextDepth):
+            """Return the maximum successor value at a Pac-Man decision node."""
             bestScore = -float('inf')
             bestAction = None
             legalActions = state.getLegalActions(agentIndex)
@@ -281,6 +294,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
             return bestScore, bestAction
 
         def expValue(state, agentIndex, currentDepth, nextAgent, nextDepth):
+            """Return the average successor value under a uniform random ghost policy."""
             legalActions = state.getLegalActions(agentIndex)
             if not legalActions:
                 return self.getEval(state), None
@@ -297,6 +311,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         return chosenAction or "Stop"
 
     def getEval(self, state: Any) -> float:
+        """Return the configured evaluation of a game state."""
         if callable(self.evaluationFunction):
             return self.evaluationFunction(state)
         return state.getScore()
@@ -356,4 +371,5 @@ def betterEvaluationFunction(currentGameState: Any) -> float:
 
 
 def manhattanDistance(xy1: Tuple[int, int], xy2: Tuple[int, int]) -> int:
+    """Support the manhattanDistance operation used by this algorithm."""
     return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])

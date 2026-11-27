@@ -21,6 +21,7 @@ class ExactInference:
     """
 
     def __init__(self, rows: int, cols: int, transition_probs: Dict[Tuple[int, int], Dict[Tuple[int, int], float]], sensor_std: float = 1.0):
+        """Initialize this object's state and configuration."""
         self.rows = rows
         self.cols = cols
         self.transition_probs = transition_probs
@@ -31,6 +32,7 @@ class ExactInference:
         }
 
     def _normalize(self) -> None:
+        """Normalize state probabilities, using a uniform fallback if all weights vanish."""
         total = sum(self.belief.values())
         if total == 0:
             uniform = 1.0 / (self.rows * self.cols)
@@ -64,9 +66,11 @@ class ExactInference:
         self._normalize()
 
     def get_belief(self) -> Dict[Tuple[int, int], float]:
+        """Return a copy of the current normalized state distribution."""
         return dict(self.belief)
 
     def map_estimate(self) -> Tuple[int, int]:
+        """Return the most probable state under the current belief."""
         return max(self.belief, key=self.belief.get)
 
 
@@ -84,6 +88,7 @@ class ParticleFilter:
         num_particles: int = 500,
         seed: int = 42,
     ):
+        """Initialize this object's state and configuration."""
         self.rows = rows
         self.cols = cols
         self.transition_probs = transition_probs
@@ -143,10 +148,12 @@ class ParticleFilter:
         self.particles = new_particles
 
     def get_belief(self) -> Dict[Tuple[int, int], float]:
+        """Return a copy of the current normalized state distribution."""
         total = sum(self.particles.values())
         return {s: cnt / total for s, cnt in self.particles.items()}
 
     def map_estimate(self) -> Tuple[int, int]:
+        """Return the most probable state under the current belief."""
         return max(self.particles, key=self.particles.get)
 
 
@@ -155,68 +162,90 @@ class ParticleFilter:
 # =============================================================================
 
 class Formula:
+    """Define the base type for propositional logic formulas."""
     pass
 
 
 class Atom(Formula):
+    """Represent a propositional variable by its name."""
     def __init__(self, name: str):
+        """Initialize this object's state and configuration."""
         self.name = name
 
     def __repr__(self) -> str:
+        """Support the   repr   operation used by this algorithm."""
         return self.name
 
     def __eq__(self, other) -> bool:
+        """Support the   eq   operation used by this algorithm."""
         return isinstance(other, Atom) and self.name == other.name
 
     def __hash__(self) -> int:
+        """Support the   hash   operation used by this algorithm."""
         return hash(("Atom", self.name))
 
 
 class Not(Formula):
+    """Represent logical negation of a formula."""
     def __init__(self, arg: Formula):
+        """Initialize this object's state and configuration."""
         self.arg = arg
 
     def __repr__(self) -> str:
+        """Support the   repr   operation used by this algorithm."""
         return f"~{self.arg}"
 
 
 class And(Formula):
+    """Represent the conjunction of two formulas."""
     def __init__(self, left: Formula, right: Formula):
+        """Initialize this object's state and configuration."""
         self.left = left
         self.right = right
 
     def __repr__(self) -> str:
+        """Support the   repr   operation used by this algorithm."""
         return f"({self.left} & {self.right})"
 
 
 class Or(Formula):
+    """Represent the disjunction of two formulas."""
     def __init__(self, left: Formula, right: Formula):
+        """Initialize this object's state and configuration."""
         self.left = left
         self.right = right
 
     def __repr__(self) -> str:
+        """Support the   repr   operation used by this algorithm."""
         return f"({self.left} | {self.right})"
 
 
 class Implies(Formula):
+    """Represent an implication between two formulas."""
     def __init__(self, left: Formula, right: Formula):
+        """Initialize this object's state and configuration."""
         self.left = left
         self.right = right
 
     def __repr__(self) -> str:
+        """Support the   repr   operation used by this algorithm."""
         return f"({self.left} -> {self.right})"
 
 
 class Equiv(Formula):
+    """Represent logical equivalence between two formulas."""
     def __init__(self, left: Formula, right: Formula):
+        """Initialize this object's state and configuration."""
         self.left = left
         self.right = right
 
     def __repr__(self) -> str:
+        """Support the   repr   operation used by this algorithm."""
         return f"({self.left} <-> {self.right})"
 
 
 def _eliminate_implications(f: Formula) -> Formula:
+    """Rewrite implication and equivalence operators using NOT and OR."""
     if isinstance(f, Atom):
         return f
     if isinstance(f, Not):
@@ -235,6 +264,7 @@ def _eliminate_implications(f: Formula) -> Formula:
 
 
 def _push_negations(f: Formula) -> Formula:
+    """Move negations inward until they apply only to atoms."""
     if isinstance(f, Atom):
         return f
     if isinstance(f, Not):
@@ -255,6 +285,7 @@ def _push_negations(f: Formula) -> Formula:
 
 
 def _distribute_or(a: Formula, b: Formula) -> Formula:
+    """Distribute OR over AND to build conjunctive normal form."""
     if isinstance(a, And):
         return And(_distribute_or(a.left, b), _distribute_or(a.right, b))
     if isinstance(b, And):
@@ -263,6 +294,7 @@ def _distribute_or(a: Formula, b: Formula) -> Formula:
 
 
 def _to_cnf_ast(f: Formula) -> Formula:
+    """Recursively convert a negation-normal formula tree to CNF."""
     if isinstance(f, (Atom, Not)):
         return f
     if isinstance(f, And):
@@ -273,10 +305,12 @@ def _to_cnf_ast(f: Formula) -> Formula:
 
 
 def _extract_clauses(f: Formula) -> Set[FrozenSet[str]]:
+    """Extract a CNF formula as a set of literal clauses."""
     if isinstance(f, And):
         return _extract_clauses(f.left) | _extract_clauses(f.right)
 
     def _literals(sub: Formula) -> Set[str]:
+        """Flatten a disjunction into its set of clause literals."""
         if isinstance(sub, Or):
             return _literals(sub.left) | _literals(sub.right)
         if isinstance(sub, Atom):
@@ -296,6 +330,7 @@ def to_cnf(f: Formula) -> Set[FrozenSet[str]]:
 
 
 def _negate_literal(lit: str) -> str:
+    """Return the complementary literal."""
     return lit[1:] if lit.startswith("~") else f"~{lit}"
 
 
